@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+FILE *PatientFilePointer, *DoctorFilePointer, *AppointmentFilePointer, *RoomFilePointer, *BillFilePointer, *InventoryFilePointer, *StaffFilePointer, *DepartmentFilePointer, *TempFilePointer, *LoginFilePointer;
+
 /* model and schemas */
 typedef struct Patient
 {
@@ -119,14 +121,14 @@ typedef struct Department
 } Department;
 
 /* global static size allocation of each schemas */
-Patient patients[100];
-Doctor doctors[100];
-Appointment appointments[100];
-Room rooms[100];
-Bill bills[100];
-Inventory inventories[100];
-Staff staffs[100];
-Department departments[100];
+Patient patients[1000];
+Doctor doctors[1000];
+Appointment appointments[1000];
+Room rooms[1000];
+Bill bills[1000];
+Inventory inventories[1000];
+Staff staffs[1000];
+Department departments[1000];
 
 /* global static count of each schemas */
 int patientCount = 0;
@@ -139,6 +141,8 @@ int staffCount = 0;
 int departmentCount = 0;
 
 /* function declaration */
+int login();
+int createAccount();
 void addPatient();
 void addDoctor();
 void addAppointment();
@@ -175,9 +179,10 @@ void removeDepartment();
 int main()
 {
     int choice;
+    int loginChoice;
 
     printf("\n\n\n\n");
-    printf("      *******************************************************************\n");
+    printf("     ********************************************************************\n");
     printf("     *                                                                   *\n");
     printf("     *                                                                   *\n");
     printf("     *             Welcome  TO  Hotel Management System                   *\n");
@@ -185,6 +190,66 @@ int main()
     printf("     *                                                                   *\n");
     printf("      *******************************************************************\n");
     printf("\n\n\n\n\n");
+
+    printf("****************You Have An Already Account?****************\n");
+    printf("1. Yes\n");
+    printf("2. No\n");
+    printf("Enter your choice: ");
+    scanf("%d", &loginChoice);
+
+    if (loginChoice == 2)
+    {
+        int isCreated = createAccount();
+
+        printf("\n\n\n\n");
+        printf("     *********************************************************************\n");
+        printf("     *                                                                   *\n");
+        printf("     *                                                                   *\n");
+        printf("     *           Account Successfully Created Please Login!              *\n");
+        printf("     *                                                                   *\n");
+        printf("     *                                                                   *\n");
+        printf("     *********************************************************************\n");
+        printf("\n\n\n\n\n");
+
+        int isTrue = login();
+
+        if (isTrue == 0)
+        {
+            printf("Invalid username or password\n");
+            return 0;
+        }
+
+        printf("\n\n\n\n");
+        printf("     *********************************************************************\n");
+        printf("     *                                                                   *\n");
+        printf("     *                                                                   *\n");
+        printf("     *                           Login Successfull!                      *\n");
+        printf("     *                                                                   *\n");
+        printf("     *                                                                   *\n");
+        printf("     *********************************************************************\n");
+        printf("\n\n\n\n\n");
+    }
+    else
+    {
+        int isTrue = login();
+
+        if (isTrue == 0)
+        {
+            printf("Invalid username or password\n");
+            return 0;
+        }
+
+        printf("\n\n\n\n");
+        printf("     *********************************************************************\n");
+        printf("     *                                                                   *\n");
+        printf("     *                                                                   *\n");
+        printf("     *                           Login Successfull!                      *\n");
+        printf("     *                                                                   *\n");
+        printf("     *                                                                   *\n");
+        printf("     *********************************************************************\n");
+        printf("\n\n\n\n\n");
+    }
+
     while (1)
     {
         printf("\n");
@@ -332,6 +397,62 @@ int main()
     return 0;
 }
 
+int createAccount()
+{
+    char username[50];
+    char password[50];
+
+    printf("Enter username: ");
+    scanf("%s", username);
+    printf("Enter password: ");
+    scanf("%s", password);
+
+    LoginFilePointer = fopen("./data/login.txt", "a");
+
+    if (LoginFilePointer == NULL)
+    {
+        printf("Error!");
+        return 0;
+    }
+
+    fprintf(LoginFilePointer, " %s %s", username, password);
+
+    fclose(LoginFilePointer);
+
+    return 1;
+}
+
+int login()
+{
+    char username[50];
+    char password[50];
+
+    printf("Enter username: ");
+    scanf("%s", username);
+    printf("Enter password: ");
+    scanf("%s", password);
+
+    LoginFilePointer = fopen("./data/login.txt", "r");
+
+    if (LoginFilePointer == NULL)
+    {
+        printf("Error!");
+        return 0;
+    }
+
+    while (fscanf(LoginFilePointer, " %s %s", username, password) != EOF)
+    {
+        if (username == username && password == password)
+        {
+            return 1;
+        }
+    }
+
+    fclose(LoginFilePointer);
+
+    return 0;
+}
+
 void addPatient()
 {
     printf("\n--------------------Add New Patient Details--------------------\n");
@@ -374,6 +495,19 @@ void addPatient()
     scanf("%s", patients[patientCount].patientEmergencyContactAddress);
     printf("Enter patient emergency contact email: ");
     scanf("%s", patients[patientCount].patientEmergencyContactEmail);
+
+    PatientFilePointer = fopen("./data/patient.txt", "a");
+
+    if (PatientFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    fprintf(PatientFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %d %s %s %s %s", patients[patientCount].patientId, patients[patientCount].patientName, patients[patientCount].patientAddress, patients[patientCount].patientContact, patients[patientCount].patientEmail, patients[patientCount].patientGender, patients[patientCount].patientBloodGroup, patients[patientCount].patientDisease, patients[patientCount].patientAdmitDate, patients[patientCount].patientDischargeDate, patients[patientCount].patientRoomNo, patients[patientCount].patientAge, patients[patientCount].patientWeight, patients[patientCount].patientHeight, patients[patientCount].patientEmergencyContactName, patients[patientCount].patientEmergencyContactRelation, patients[patientCount].patientEmergencyContactAddress, patients[patientCount].patientEmergencyContactEmail);
+
+    fclose(PatientFilePointer);
+
     patientCount++;
 };
 
@@ -415,6 +549,19 @@ void addDoctor()
     scanf("%s", doctors[doctorCount].doctorEmergencyContactAddress);
     printf("Enter doctor emergency contact email: ");
     scanf("%s", doctors[doctorCount].doctorEmergencyContactEmail);
+
+    DoctorFilePointer = fopen("./data/doctor.txt", "a");
+
+    if (DoctorFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    fprintf(DoctorFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %s %s %s %s", doctors[doctorCount].doctorId, doctors[doctorCount].doctorName, doctors[doctorCount].doctorAddress, doctors[doctorCount].doctorContact, doctors[doctorCount].doctorEmail, doctors[doctorCount].doctorGender, doctors[doctorCount].doctorBloodGroup, doctors[doctorCount].doctorSpecialization, doctors[doctorCount].doctorJoiningDate, doctors[doctorCount].doctorLeavingDate, doctors[doctorCount].doctorAge, doctors[doctorCount].doctorWeight, doctors[doctorCount].doctorHeight, doctors[doctorCount].doctorEmergencyContactName, doctors[doctorCount].doctorEmergencyContactRelation, doctors[doctorCount].doctorEmergencyContactAddress, doctors[doctorCount].doctorEmergencyContactEmail);
+
+    fclose(DoctorFilePointer);
+
     doctorCount++;
 }
 
@@ -434,6 +581,19 @@ void addAppointment()
     scanf("%s", appointments[appointmentCount].appointmentTime);
     printf("Enter appointment status: ");
     scanf("%s", appointments[appointmentCount].appointmentStatus);
+
+    AppointmentFilePointer = fopen("./data/appointment.txt", "a");
+
+    if (AppointmentFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    fprintf(AppointmentFilePointer, " %d %d %d %s %s %s", appointments[appointmentCount].appointmentId, appointments[appointmentCount].patientId, appointments[appointmentCount].doctorId, appointments[appointmentCount].appointmentDate, appointments[appointmentCount].appointmentTime, appointments[appointmentCount].appointmentStatus);
+
+    fclose(AppointmentFilePointer);
+
     appointmentCount++;
 }
 
@@ -449,6 +609,19 @@ void addRoom()
     scanf("%s", rooms[roomCount].roomType);
     printf("Enter room status: ");
     scanf("%s", rooms[roomCount].roomStatus);
+
+    RoomFilePointer = fopen("./data/room.txt", "a");
+
+    if (RoomFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    fprintf(RoomFilePointer, " %d %d %s %s", rooms[roomCount].roomId, rooms[roomCount].roomNo, rooms[roomCount].roomType, rooms[roomCount].roomStatus);
+
+    fclose(RoomFilePointer);
+
     roomCount++;
 }
 
@@ -472,6 +645,19 @@ void addBill()
     scanf("%s", bills[billCount].billDate);
     printf("Enter bill status: ");
     scanf("%s", bills[billCount].billStatus);
+
+    BillFilePointer = fopen("./data/bill.txt", "a");
+
+    if (BillFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    fprintf(BillFilePointer, " %d %d %d %d %d %d %s %s", bills[billCount].billId, bills[billCount].patientId, bills[billCount].doctorId, bills[billCount].roomId, bills[billCount].appointmentId, bills[billCount].totalAmount, bills[billCount].billDate, bills[billCount].billStatus);
+
+    fclose(BillFilePointer);
+
     billCount++;
 }
 
@@ -489,6 +675,19 @@ void addInventory()
     scanf("%d", &inventories[inventoryCount].inventoryPrice);
     printf("Enter inventory status: ");
     scanf("%s", inventories[inventoryCount].inventoryStatus);
+
+    InventoryFilePointer = fopen("./data/inventory.txt", "a");
+
+    if (InventoryFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    fprintf(InventoryFilePointer, " %d %s %d %d %s", inventories[inventoryCount].inventoryId, inventories[inventoryCount].inventoryName, inventories[inventoryCount].inventoryQuantity, inventories[inventoryCount].inventoryPrice, inventories[inventoryCount].inventoryStatus);
+
+    fclose(InventoryFilePointer);
+
     inventoryCount++;
 }
 
@@ -530,6 +729,19 @@ void addStaff()
     scanf("%s", staffs[staffCount].staffEmergencyContactAddress);
     printf("Enter staff emergency contact email: ");
     scanf("%s", staffs[staffCount].staffEmergencyContactEmail);
+
+    StaffFilePointer = fopen("./data/staff.txt", "a");
+
+    if (StaffFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    fprintf(StaffFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %s %s %s %s", staffs[staffCount].staffId, staffs[staffCount].staffName, staffs[staffCount].staffAddress, staffs[staffCount].staffContact, staffs[staffCount].staffEmail, staffs[staffCount].staffGender, staffs[staffCount].staffBloodGroup, staffs[staffCount].staffDesignation, staffs[staffCount].staffJoiningDate, staffs[staffCount].staffLeavingDate, staffs[staffCount].staffAge, staffs[staffCount].staffWeight, staffs[staffCount].staffHeight, staffs[staffCount].staffEmergencyContactName, staffs[staffCount].staffEmergencyContactRelation, staffs[staffCount].staffEmergencyContactAddress, staffs[staffCount].staffEmergencyContactEmail);
+
+    fclose(StaffFilePointer);
+
     staffCount++;
 }
 
@@ -549,14 +761,42 @@ void addDepartment()
     scanf("%s", departments[departmentCount].departmentEmail);
     printf("Enter department status: ");
     scanf("%s", departments[departmentCount].departmentStatus);
+
+    DepartmentFilePointer = fopen("./data/department.txt", "a");
+
+    if (DepartmentFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    fprintf(DepartmentFilePointer, " %d %s %s %s %s %s", departments[departmentCount].departmentId, departments[departmentCount].departmentName, departments[departmentCount].departmentHead, departments[departmentCount].departmentContact, departments[departmentCount].departmentEmail, departments[departmentCount].departmentStatus);
+
+    fclose(DepartmentFilePointer);
+
     departmentCount++;
 }
 
 void displayPatient()
 {
+    int count = 0;
     printf("\n--------------------All Patient Details--------------------\n");
     printf("\n");
-    for (int i = 0; i < patientCount; i++)
+
+    PatientFilePointer = fopen("./data/patient.txt", "r");
+
+    if (PatientFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(PatientFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %d %s %s %s %s", &patients[count].patientId, patients[count].patientName, patients[count].patientAddress, patients[count].patientContact, patients[count].patientEmail, patients[count].patientGender, patients[count].patientBloodGroup, patients[count].patientDisease, patients[count].patientAdmitDate, patients[count].patientDischargeDate, &patients[count].patientRoomNo, &patients[count].patientAge, &patients[count].patientWeight, &patients[count].patientHeight, patients[count].patientEmergencyContactName, patients[count].patientEmergencyContactRelation, patients[count].patientEmergencyContactAddress, patients[count].patientEmergencyContactEmail) != EOF)
+    {
+        count++;
+    }
+
+    for (int i = 0; i < count; i++)
     {
         printf("Patient Id: %d\n", patients[i].patientId);
         printf("Patient Name: %s\n", patients[i].patientName);
@@ -579,13 +819,30 @@ void displayPatient()
         printf("Patient Emergency Contact Email: %s\n", patients[i].patientEmergencyContactEmail);
         printf("\n");
     };
+
+    fclose(PatientFilePointer);
 };
 
 void displayDoctor()
 {
+    int count = 0;
     printf("\n--------------------All Doctor Details--------------------\n");
     printf("\n");
-    for (int i = 0; i < doctorCount; i++)
+
+    DoctorFilePointer = fopen("./data/doctor.txt", "r");
+
+    if (DoctorFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(DoctorFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %s %s %s %s", &doctors[count].doctorId, doctors[count].doctorName, doctors[count].doctorAddress, doctors[count].doctorContact, doctors[count].doctorEmail, doctors[count].doctorGender, doctors[count].doctorBloodGroup, doctors[count].doctorSpecialization, doctors[count].doctorJoiningDate, doctors[count].doctorLeavingDate, &doctors[count].doctorAge, &doctors[count].doctorWeight, &doctors[count].doctorHeight, doctors[count].doctorEmergencyContactName, doctors[count].doctorEmergencyContactRelation, doctors[count].doctorEmergencyContactAddress, doctors[count].doctorEmergencyContactEmail) != EOF)
+    {
+        count++;
+    }
+
+    for (int i = 0; i < count; i++)
     {
         printf("Doctor Id: %d\n", doctors[i].doctorId);
         printf("Doctor Name: %s\n", doctors[i].doctorName);
@@ -606,13 +863,30 @@ void displayDoctor()
         printf("Doctor Emergency Contact Email: %s\n", doctors[i].doctorEmergencyContactEmail);
         printf("\n");
     };
+
+    fclose(DoctorFilePointer);
 };
 
 void displayAppointment()
 {
+    int count = 0;
     printf("\n--------------------All Appointment Details--------------------\n");
     printf("\n");
-    for (int i = 0; i < appointmentCount; i++)
+
+    AppointmentFilePointer = fopen("./data/appointment.txt", "r");
+
+    if (AppointmentFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(AppointmentFilePointer, " %d %d %d %s %s %s", &appointments[count].appointmentId, &appointments[count].patientId, &appointments[count].doctorId, appointments[count].appointmentDate, appointments[count].appointmentTime, appointments[count].appointmentStatus) != EOF)
+    {
+        count++;
+    }
+
+    for (int i = 0; i < count; i++)
     {
         printf("Appointment Id: %d\n", appointments[i].appointmentId);
         printf("Patient Id: %d\n", appointments[i].patientId);
@@ -622,13 +896,29 @@ void displayAppointment()
         printf("Appointment Status: %s\n", appointments[i].appointmentStatus);
         printf("\n");
     };
+
+    fclose(AppointmentFilePointer);
 };
 
 void displayRoom()
 {
+    int count = 0;
     printf("\n--------------------All Room Details--------------------\n");
     printf("\n");
-    for (int i = 0; i < roomCount; i++)
+    RoomFilePointer = fopen("./data/room.txt", "r");
+
+    if (RoomFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(RoomFilePointer, " %d %d %s %s", &rooms[count].roomId, &rooms[count].roomNo, rooms[count].roomType, rooms[count].roomStatus) != EOF)
+    {
+        count++;
+    }
+
+    for (int i = 0; i < count; i++)
     {
         printf("Room Id: %d\n", rooms[i].roomId);
         printf("Room No: %d\n", rooms[i].roomNo);
@@ -636,13 +926,30 @@ void displayRoom()
         printf("Room Status: %s\n", rooms[i].roomStatus);
         printf("\n");
     };
+
+    fclose(RoomFilePointer);
 };
 
 void displayBill()
 {
+    int count = 0;
     printf("\n--------------------All Bills Details--------------------\n");
     printf("\n");
-    for (int i = 0; i < billCount; i++)
+
+    BillFilePointer = fopen("./data/bill.txt", "r");
+
+    if (BillFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(BillFilePointer, " %d %d %d %d %d %d %s %s", &bills[count].billId, &bills[count].patientId, &bills[count].doctorId, &bills[count].roomId, &bills[count].appointmentId, &bills[count].totalAmount, bills[count].billDate, bills[count].billStatus) != EOF)
+    {
+        count++;
+    }
+
+    for (int i = 0; i < count; i++)
     {
         printf("Bill Id: %d\n", bills[i].billId);
         printf("Patient Id: %d\n", bills[i].patientId);
@@ -654,13 +961,30 @@ void displayBill()
         printf("Bill Status: %s\n", bills[i].billStatus);
         printf("\n");
     };
+
+    fclose(BillFilePointer);
 };
 
 void displayInventory()
 {
+    int count = 0;
     printf("\n--------------------All Inventory Details--------------------\n");
     printf("\n");
-    for (int i = 0; i < inventoryCount; i++)
+
+    InventoryFilePointer = fopen("./data/inventory.txt", "r");
+
+    if (InventoryFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(InventoryFilePointer, " %d %s %d %d %s", &inventories[count].inventoryId, inventories[count].inventoryName, &inventories[count].inventoryQuantity, &inventories[count].inventoryPrice, inventories[count].inventoryStatus) != EOF)
+    {
+        count++;
+    }
+
+    for (int i = 0; i < count; i++)
     {
         printf("Inventory Id: %d\n", inventories[i].inventoryId);
         printf("Inventory Name: %s\n", inventories[i].inventoryName);
@@ -669,13 +993,30 @@ void displayInventory()
         printf("Inventory Status: %s\n", inventories[i].inventoryStatus);
         printf("\n");
     };
+
+    fclose(InventoryFilePointer);
 };
 
 void displayStaff()
 {
+    int count = 0;
     printf("\n--------------------All Staff Details--------------------\n");
     printf("\n");
-    for (int i = 0; i < staffCount; i++)
+
+    StaffFilePointer = fopen("./data/staff.txt", "r");
+
+    if (StaffFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(StaffFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %s %s %s %s", &staffs[count].staffId, staffs[count].staffName, staffs[count].staffAddress, staffs[count].staffContact, staffs[count].staffEmail, staffs[count].staffGender, staffs[count].staffBloodGroup, staffs[count].staffDesignation, staffs[count].staffJoiningDate, staffs[count].staffLeavingDate, &staffs[count].staffAge, &staffs[count].staffWeight, &staffs[count].staffHeight, staffs[count].staffEmergencyContactName, staffs[count].staffEmergencyContactRelation, staffs[count].staffEmergencyContactAddress, staffs[count].staffEmergencyContactEmail) != EOF)
+    {
+        count++;
+    }
+
+    for (int i = 0; i < count; i++)
     {
         printf("Staff Id: %d\n", staffs[i].staffId);
         printf("Staff Name: %s\n", staffs[i].staffName);
@@ -696,13 +1037,30 @@ void displayStaff()
         printf("Staff Emergency Contact Email: %s\n", staffs[i].staffEmergencyContactEmail);
         printf("\n");
     };
+
+    fclose(StaffFilePointer);
 };
 
 void displayDepartment()
 {
+    int count = 0;
     printf("\n--------------------All Department Details--------------------\n");
     printf("\n");
-    for (int i = 0; i < departmentCount; i++)
+
+    DepartmentFilePointer = fopen("./data/department.txt", "r");
+
+    if (DepartmentFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(DepartmentFilePointer, " %d %s %s %s %s %s", &departments[count].departmentId, departments[count].departmentName, departments[count].departmentHead, departments[count].departmentContact, departments[count].departmentEmail, departments[count].departmentStatus) != EOF)
+    {
+        count++;
+    }
+
+    for (int i = 0; i < count; i++)
     {
         printf("Department Id: %d\n", departments[i].departmentId);
         printf("Department Name: %s\n", departments[i].departmentName);
@@ -712,17 +1070,34 @@ void displayDepartment()
         printf("Department Status: %s\n", departments[i].departmentStatus);
         printf("\n");
     };
+
+    fclose(DepartmentFilePointer);
 };
 
 void updatePatient()
 {
+    int count = 0;
     printf("\n--------------------Update Patient Details--------------------\n");
     printf("\n");
+
+    PatientFilePointer = fopen("./data/patient.txt", "r");
+
+    if (PatientFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(PatientFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %d %s %s %s %s", &patients[count].patientId, patients[count].patientName, patients[count].patientAddress, patients[count].patientContact, patients[count].patientEmail, patients[count].patientGender, patients[count].patientBloodGroup, patients[count].patientDisease, patients[count].patientAdmitDate, patients[count].patientDischargeDate, &patients[count].patientRoomNo, &patients[count].patientAge, &patients[count].patientWeight, &patients[count].patientHeight, patients[count].patientEmergencyContactName, patients[count].patientEmergencyContactRelation, patients[count].patientEmergencyContactAddress, patients[count].patientEmergencyContactEmail) != EOF)
+    {
+        count++;
+    }
+
     int patientId;
     int choice;
     printf("Enter patient id: ");
     scanf("%d", &patientId);
-    for (int i = 0; i < patientCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (patients[i].patientId == patientId)
         {
@@ -824,20 +1199,57 @@ void updatePatient()
                 printf("Please enter right choice\n");
                 break;
             };
+
+            TempFilePointer = fopen("./data/patient.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                fprintf(TempFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %d %s %s %s %s", patients[i].patientId, patients[i].patientName, patients[i].patientAddress, patients[i].patientContact, patients[i].patientEmail, patients[i].patientGender, patients[i].patientBloodGroup, patients[i].patientDisease, patients[i].patientAdmitDate, patients[i].patientDischargeDate, patients[i].patientRoomNo, patients[i].patientAge, patients[i].patientWeight, patients[i].patientHeight, patients[i].patientEmergencyContactName, patients[i].patientEmergencyContactRelation, patients[i].patientEmergencyContactAddress, patients[i].patientEmergencyContactEmail);
+            };
+
+            fclose(TempFilePointer);
+
+            fclose(PatientFilePointer);
+
+            return;
         };
     };
+
+    fclose(PatientFilePointer);
+
     printf("Patient Details not found\n");
 };
 
 void updateDoctor()
 {
+    int count = 0;
     printf("\n--------------------Update Doctor Details--------------------\n");
     printf("\n");
+
+    DoctorFilePointer = fopen("./data/doctor.txt", "r");
+
+    if (DoctorFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(DoctorFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %s %s %s %s", &doctors[count].doctorId, doctors[count].doctorName, doctors[count].doctorAddress, doctors[count].doctorContact, doctors[count].doctorEmail, doctors[count].doctorGender, doctors[count].doctorBloodGroup, doctors[count].doctorSpecialization, doctors[count].doctorJoiningDate, doctors[count].doctorLeavingDate, &doctors[count].doctorAge, &doctors[count].doctorWeight, &doctors[count].doctorHeight, doctors[count].doctorEmergencyContactName, doctors[count].doctorEmergencyContactRelation, doctors[count].doctorEmergencyContactAddress, doctors[count].doctorEmergencyContactEmail) != EOF)
+    {
+        count++;
+    }
+
     int doctorId;
     int choice;
     printf("Enter doctor id: ");
     scanf("%d", &doctorId);
-    for (int i = 0; i < doctorCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (doctors[i].doctorId == doctorId)
         {
@@ -929,20 +1341,55 @@ void updateDoctor()
                 printf("Please enter right choice\n");
                 break;
             };
+
+            TempFilePointer = fopen("./data/doctor.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                fprintf(TempFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %s %s %s %s", doctors[i].doctorId, doctors[i].doctorName, doctors[i].doctorAddress, doctors[i].doctorContact, doctors[i].doctorEmail, doctors[i].doctorGender, doctors[i].doctorBloodGroup, doctors[i].doctorSpecialization, doctors[i].doctorJoiningDate, doctors[i].doctorLeavingDate, doctors[i].doctorAge, doctors[i].doctorWeight, doctors[i].doctorHeight, doctors[i].doctorEmergencyContactName, doctors[i].doctorEmergencyContactRelation, doctors[i].doctorEmergencyContactAddress, doctors[i].doctorEmergencyContactEmail);
+            };
+
+            fclose(TempFilePointer);
+            fclose(DoctorFilePointer);
+
+            return;
         };
     };
+
+    fclose(DoctorFilePointer);
     printf("Doctor Details not found\n");
 };
 
 void updateAppointment()
 {
+    int count = 0;
     printf("\n--------------------Update Appointment Details--------------------\n");
     printf("\n");
+
+    AppointmentFilePointer = fopen("./data/appointment.txt", "r");
+
+    if (AppointmentFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(AppointmentFilePointer, " %d %d %d %s %s %s", &appointments[count].appointmentId, &appointments[count].patientId, &appointments[count].doctorId, appointments[count].appointmentDate, appointments[count].appointmentTime, appointments[count].appointmentStatus) != EOF)
+    {
+        count++;
+    }
+
     int appointmentId;
     int choice;
     printf("Enter appointment id: ");
     scanf("%d", &appointmentId);
-    for (int i = 0; i < appointmentCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (appointments[i].appointmentId == appointmentId)
         {
@@ -984,20 +1431,55 @@ void updateAppointment()
                 printf("Please enter right choice\n");
                 break;
             };
+
+            TempFilePointer = fopen("./data/appointment.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                fprintf(TempFilePointer, " %d %d %d %s %s %s", appointments[i].appointmentId, appointments[i].patientId, appointments[i].doctorId, appointments[i].appointmentDate, appointments[i].appointmentTime, appointments[i].appointmentStatus);
+            };
+
+            fclose(TempFilePointer);
+            fclose(AppointmentFilePointer);
+
+            return;
         };
     };
+
+    fclose(AppointmentFilePointer);
     printf("Appointment Details not found\n");
 };
 
 void updateRoom()
 {
+    int count = 0;
     printf("\n--------------------Update Room Details--------------------\n");
     printf("\n");
+
+    RoomFilePointer = fopen("./data/room.txt", "r");
+
+    if (RoomFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(RoomFilePointer, " %d %d %s %s", &rooms[count].roomId, &rooms[count].roomNo, rooms[count].roomType, rooms[count].roomStatus) != EOF)
+    {
+        count++;
+    }
+
     int roomId;
     int choice;
     printf("Enter room id: ");
     scanf("%d", &roomId);
-    for (int i = 0; i < roomCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (rooms[i].roomId == roomId)
         {
@@ -1029,20 +1511,57 @@ void updateRoom()
                 printf("Please enter right choice\n");
                 break;
             };
+
+            TempFilePointer = fopen("./data/room.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                fprintf(TempFilePointer, " %d %d %s %s", rooms[i].roomId, rooms[i].roomNo, rooms[i].roomType, rooms[i].roomStatus);
+            };
+
+            fclose(TempFilePointer);
+
+            fclose(RoomFilePointer);
+
+            return;
         };
     };
+
+    fclose(RoomFilePointer);
+
     printf("Room Details not found\n");
 };
 
 void updateBill()
 {
+    int count = 0;
     printf("\n--------------------Update Bill Details--------------------\n");
     printf("\n");
+
+    BillFilePointer = fopen("./data/bill.txt", "r");
+
+    if (BillFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(BillFilePointer, " %d %d %d %d %d %d %s %s", &bills[count].billId, &bills[count].patientId, &bills[count].doctorId, &bills[count].roomId, &bills[count].appointmentId, &bills[count].totalAmount, bills[count].billDate, bills[count].billStatus) != EOF)
+    {
+        count++;
+    }
+
     int billId;
     int choice;
     printf("Enter bill id: ");
     scanf("%d", &billId);
-    for (int i = 0; i < billCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (bills[i].billId == billId)
         {
@@ -1094,20 +1613,56 @@ void updateBill()
                 printf("Please enter right choice\n");
                 break;
             };
+
+            TempFilePointer = fopen("./data/bill.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                fprintf(TempFilePointer, " %d %d %d %d %d %d %s %s", bills[i].billId, bills[i].patientId, bills[i].doctorId, bills[i].roomId, bills[i].appointmentId, bills[i].totalAmount, bills[i].billDate, bills[i].billStatus);
+            };
+
+            fclose(TempFilePointer);
+            fclose(BillFilePointer);
+
+            return;
         };
     };
+
+    fclose(BillFilePointer);
+
     printf("Bill Details not found\n");
 };
 
 void updateInventory()
 {
+    int count = 0;
     printf("\n--------------------Update Inventory Details--------------------\n");
     printf("\n");
+
+    InventoryFilePointer = fopen("./data/inventory.txt", "r");
+
+    if (InventoryFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(InventoryFilePointer, " %d %s %d %d %s", &inventories[count].inventoryId, inventories[count].inventoryName, &inventories[count].inventoryQuantity, &inventories[count].inventoryPrice, inventories[count].inventoryStatus) != EOF)
+    {
+        count++;
+    }
+
     int inventoryId;
     int choice;
     printf("Enter inventory id: ");
     scanf("%d", &inventoryId);
-    for (int i = 0; i < inventoryCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (inventories[i].inventoryId == inventoryId)
         {
@@ -1144,20 +1699,55 @@ void updateInventory()
                 printf("Please enter right choice\n");
                 break;
             };
+
+            TempFilePointer = fopen("./data/inventory.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                fprintf(TempFilePointer, " %d %s %d %d %s", inventories[i].inventoryId, inventories[i].inventoryName, inventories[i].inventoryQuantity, inventories[i].inventoryPrice, inventories[i].inventoryStatus);
+            };
+
+            fclose(TempFilePointer);
+            fclose(InventoryFilePointer);
+            return;
         };
     };
+
+    fclose(InventoryFilePointer);
+
     printf("Inventory Details not found\n");
 };
 
 void updateStaff()
 {
+    int count = 0;
     printf("\n--------------------Update Staff Details--------------------\n");
     printf("\n");
+
+    StaffFilePointer = fopen("./data/staff.txt", "r");
+
+    if (StaffFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(StaffFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %s %s %s %s", &staffs[count].staffId, staffs[count].staffName, staffs[count].staffAddress, staffs[count].staffContact, staffs[count].staffEmail, staffs[count].staffGender, staffs[count].staffBloodGroup, staffs[count].staffDesignation, staffs[count].staffJoiningDate, staffs[count].staffLeavingDate, &staffs[count].staffAge, &staffs[count].staffWeight, &staffs[count].staffHeight, staffs[count].staffEmergencyContactName, staffs[count].staffEmergencyContactRelation, staffs[count].staffEmergencyContactAddress, staffs[count].staffEmergencyContactEmail) != EOF)
+    {
+        count++;
+    }
+
     int staffId;
     int choice;
     printf("Enter staff id: ");
     scanf("%d", &staffId);
-    for (int i = 0; i < staffCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (staffs[i].staffId == staffId)
         {
@@ -1254,20 +1844,56 @@ void updateStaff()
                 printf("Please enter right choice\n");
                 break;
             };
+
+            TempFilePointer = fopen("./data/staff.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                fprintf(TempFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %s %s %s %s", staffs[i].staffId, staffs[i].staffName, staffs[i].staffAddress, staffs[i].staffContact, staffs[i].staffEmail, staffs[i].staffGender, staffs[i].staffBloodGroup, staffs[i].staffDesignation, staffs[i].staffJoiningDate, staffs[i].staffLeavingDate, staffs[i].staffAge, staffs[i].staffWeight, staffs[i].staffHeight, staffs[i].staffEmergencyContactName, staffs[i].staffEmergencyContactRelation, staffs[i].staffEmergencyContactAddress, staffs[i].staffEmergencyContactEmail);
+            };
+
+            fclose(TempFilePointer);
+            fclose(StaffFilePointer);
+
+            return;
         };
     };
+
+    fclose(StaffFilePointer);
+
     printf("Staff Details not found\n");
 };
 
 void updateDepartment()
 {
+    int count = 0;
     printf("\n--------------------Update Department Details--------------------\n");
     printf("\n");
+
+    DepartmentFilePointer = fopen("./data/department.txt", "r");
+
+    if (DepartmentFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(DepartmentFilePointer, " %d %s %s %s %s %s", &departments[count].departmentId, departments[count].departmentName, departments[count].departmentHead, departments[count].departmentContact, departments[count].departmentEmail, departments[count].departmentStatus) != EOF)
+    {
+        count++;
+    }
+
     int departmentId;
     int choice;
     printf("Enter department id: ");
     scanf("%d", &departmentId);
-    for (int i = 0; i < departmentCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (departments[i].departmentId == departmentId)
         {
@@ -1309,19 +1935,67 @@ void updateDepartment()
                 printf("Please enter right choice\n");
                 break;
             };
+
+            TempFilePointer = fopen("./data/department.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                fprintf(TempFilePointer, " %d %s %s %s %s %s", departments[i].departmentId, departments[i].departmentName, departments[i].departmentHead, departments[i].departmentContact, departments[i].departmentEmail, departments[i].departmentStatus);
+            };
+
+            fclose(TempFilePointer);
+            fclose(DepartmentFilePointer);
+
+            return;
         };
     };
+
+    fclose(DepartmentFilePointer);
+
     printf("Department Details not found\n");
 };
 
 void removePatient()
 {
+    int count = 0;
     printf("\n--------------------Remove Patient Details--------------------\n");
     printf("\n");
+
+    PatientFilePointer = fopen("./data/patient.txt", "r");
+
+    if (PatientFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(PatientFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %d %s %s %s %s", &patients[count].patientId, patients[count].patientName, patients[count].patientAddress, patients[count].patientContact, patients[count].patientEmail, patients[count].patientGender, patients[count].patientBloodGroup, patients[count].patientDisease, patients[count].patientAdmitDate, patients[count].patientDischargeDate, &patients[count].patientRoomNo, &patients[count].patientAge, &patients[count].patientWeight, &patients[count].patientHeight, patients[count].patientEmergencyContactName, patients[count].patientEmergencyContactRelation, patients[count].patientEmergencyContactAddress, patients[count].patientEmergencyContactEmail) != EOF)
+    {
+        count++;
+    }
+
+    if (count == 0)
+    {
+        printf("No patient details found\n");
+        return;
+    }
+
+    if (count == 1)
+    {
+        TempFilePointer = fopen("./data/patient.txt", "w");
+        return;
+    }
+
     int patientId;
     printf("Enter patient id: ");
     scanf("%d", &patientId);
-    for (int i = 0; i < patientCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (patients[i].patientId == patientId)
         {
@@ -1329,21 +2003,67 @@ void removePatient()
             {
                 patients[j] = patients[j + 1];
             };
-            patientCount--;
+
+            TempFilePointer = fopen("./data/patient.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count - 1; i++)
+            {
+                fprintf(TempFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %d %s %s %s %s", patients[i].patientId, patients[i].patientName, patients[i].patientAddress, patients[i].patientContact, patients[i].patientEmail, patients[i].patientGender, patients[i].patientBloodGroup, patients[i].patientDisease, patients[i].patientAdmitDate, patients[i].patientDischargeDate, patients[i].patientRoomNo, patients[i].patientAge, patients[i].patientWeight, patients[i].patientHeight, patients[i].patientEmergencyContactName, patients[i].patientEmergencyContactRelation, patients[i].patientEmergencyContactAddress, patients[i].patientEmergencyContactEmail);
+            };
+
+            fclose(TempFilePointer);
+            fclose(PatientFilePointer);
+
             return;
         };
     };
+
+    fclose(PatientFilePointer);
+
     printf("Patient Details not found\n");
 };
 
 void removeDoctor()
 {
+    int count = 0;
     printf("\n--------------------Remove Doctor Details--------------------\n");
     printf("\n");
+
+    DoctorFilePointer = fopen("./data/doctor.txt", "r");
+
+    if (DoctorFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(DoctorFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %s %s %s %s", &doctors[count].doctorId, doctors[count].doctorName, doctors[count].doctorAddress, doctors[count].doctorContact, doctors[count].doctorEmail, doctors[count].doctorGender, doctors[count].doctorBloodGroup, doctors[count].doctorSpecialization, doctors[count].doctorJoiningDate, doctors[count].doctorLeavingDate, &doctors[count].doctorAge, &doctors[count].doctorWeight, &doctors[count].doctorHeight, doctors[count].doctorEmergencyContactName, doctors[count].doctorEmergencyContactRelation, doctors[count].doctorEmergencyContactAddress, doctors[count].doctorEmergencyContactEmail) != EOF)
+    {
+        count++;
+    }
+
+    if (count == 0)
+    {
+        printf("No doctor details found\n");
+        return;
+    }
+
+    if (count == 1)
+    {
+        TempFilePointer = fopen("./data/doctor.txt", "w");
+        return;
+    }
+
     int doctorId;
     printf("Enter doctor id: ");
     scanf("%d", &doctorId);
-    for (int i = 0; i < doctorCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (doctors[i].doctorId == doctorId)
         {
@@ -1351,21 +2071,67 @@ void removeDoctor()
             {
                 doctors[j] = doctors[j + 1];
             };
-            doctorCount--;
+
+            TempFilePointer = fopen("./data/doctor.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count - 1; i++)
+            {
+                fprintf(TempFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %s %s %s %s", doctors[i].doctorId, doctors[i].doctorName, doctors[i].doctorAddress, doctors[i].doctorContact, doctors[i].doctorEmail, doctors[i].doctorGender, doctors[i].doctorBloodGroup, doctors[i].doctorSpecialization, doctors[i].doctorJoiningDate, doctors[i].doctorLeavingDate, doctors[i].doctorAge, doctors[i].doctorWeight, doctors[i].doctorHeight, doctors[i].doctorEmergencyContactName, doctors[i].doctorEmergencyContactRelation, doctors[i].doctorEmergencyContactAddress, doctors[i].doctorEmergencyContactEmail);
+            };
+
+            fclose(TempFilePointer);
+            fclose(DoctorFilePointer);
+
             return;
         };
     };
+
+    fclose(DoctorFilePointer);
+
     printf("Doctor Details not found\n");
 };
 
 void removeAppointment()
 {
+    int count = 0;
     printf("\n--------------------Remove Appointment Details--------------------\n");
     printf("\n");
+
+    AppointmentFilePointer = fopen("./data/appointment.txt", "r");
+
+    if (AppointmentFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(AppointmentFilePointer, " %d %d %d %s %s %s", &appointments[count].appointmentId, &appointments[count].patientId, &appointments[count].doctorId, appointments[count].appointmentDate, appointments[count].appointmentTime, appointments[count].appointmentStatus) != EOF)
+    {
+        count++;
+    }
+
+    if (count == 0)
+    {
+        printf("No appointment details found\n");
+        return;
+    }
+
+    if (count == 1)
+    {
+        TempFilePointer = fopen("./data/appointment.txt", "w");
+        return;
+    }
+
     int appointmentId;
     printf("Enter appointment id: ");
     scanf("%d", &appointmentId);
-    for (int i = 0; i < appointmentCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (appointments[i].appointmentId == appointmentId)
         {
@@ -1373,21 +2139,67 @@ void removeAppointment()
             {
                 appointments[j] = appointments[j + 1];
             };
-            appointmentCount--;
+
+            TempFilePointer = fopen("./data/appointment.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count - 1; i++)
+            {
+                fprintf(TempFilePointer, " %d %d %d %s %s %s", appointments[i].appointmentId, appointments[i].patientId, appointments[i].doctorId, appointments[i].appointmentDate, appointments[i].appointmentTime, appointments[i].appointmentStatus);
+            };
+
+            fclose(TempFilePointer);
+            fclose(AppointmentFilePointer);
+
             return;
         };
     };
+
+    fclose(AppointmentFilePointer);
+
     printf("Appointment Details not found\n");
 };
 
 void removeRoom()
 {
+    int count = 0;
     printf("\n--------------------Remove Room Details--------------------\n");
     printf("\n");
+
+    RoomFilePointer = fopen("./data/room.txt", "r");
+
+    if (RoomFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(RoomFilePointer, " %d %d %s %s", &rooms[count].roomId, &rooms[count].roomNo, rooms[count].roomType, rooms[count].roomStatus) != EOF)
+    {
+        count++;
+    }
+
+    if (count == 0)
+    {
+        printf("No room details found\n");
+        return;
+    }
+
+    if (count == 1)
+    {
+        TempFilePointer = fopen("./data/room.txt", "w");
+        return;
+    }
+
     int roomId;
     printf("Enter room id: ");
     scanf("%d", &roomId);
-    for (int i = 0; i < roomCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (rooms[i].roomId == roomId)
         {
@@ -1395,21 +2207,67 @@ void removeRoom()
             {
                 rooms[j] = rooms[j + 1];
             };
-            roomCount--;
+
+            TempFilePointer = fopen("./data/room.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count - 1; i++)
+            {
+                fprintf(TempFilePointer, " %d %d %s %s", rooms[i].roomId, rooms[i].roomNo, rooms[i].roomType, rooms[i].roomStatus);
+            };
+
+            fclose(TempFilePointer);
+            fclose(RoomFilePointer);
+
             return;
         };
     };
+
+    fclose(RoomFilePointer);
+
     printf("Room Details not found\n");
 };
 
 void removeBill()
 {
+    int count = 0;
     printf("\n--------------------Remove Bill Details--------------------\n");
     printf("\n");
+
+    BillFilePointer = fopen("./data/bill.txt", "r");
+
+    if (BillFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(BillFilePointer, " %d %d %d %d %d %d %s %s", &bills[count].billId, &bills[count].patientId, &bills[count].doctorId, &bills[count].roomId, &bills[count].appointmentId, &bills[count].totalAmount, bills[count].billDate, bills[count].billStatus) != EOF)
+    {
+        count++;
+    }
+
+    if (count == 0)
+    {
+        printf("No bill details found\n");
+        return;
+    }
+
+    if (count == 1)
+    {
+        TempFilePointer = fopen("./data/bill.txt", "w");
+        return;
+    }
+
     int billId;
     printf("Enter bill id: ");
     scanf("%d", &billId);
-    for (int i = 0; i < billCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (bills[i].billId == billId)
         {
@@ -1417,21 +2275,67 @@ void removeBill()
             {
                 bills[j] = bills[j + 1];
             };
-            billCount--;
+
+            TempFilePointer = fopen("./data/bill.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count - 1; i++)
+            {
+                fprintf(TempFilePointer, " %d %d %d %d %d %d %s %s", bills[i].billId, bills[i].patientId, bills[i].doctorId, bills[i].roomId, bills[i].appointmentId, bills[i].totalAmount, bills[i].billDate, bills[i].billStatus);
+            };
+
+            fclose(TempFilePointer);
+            fclose(BillFilePointer);
+
             return;
         };
     };
+
+    fclose(BillFilePointer);
+
     printf("Bill Details not found\n");
 };
 
 void removeInventory()
 {
+    int count = 0;
     printf("\n--------------------Remove Inventory Details--------------------\n");
     printf("\n");
+
+    InventoryFilePointer = fopen("./data/inventory.txt", "r");
+
+    if (InventoryFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(InventoryFilePointer, " %d %s %d %d %s", &inventories[count].inventoryId, inventories[count].inventoryName, &inventories[count].inventoryQuantity, &inventories[count].inventoryPrice, inventories[count].inventoryStatus) != EOF)
+    {
+        count++;
+    }
+
+    if (count == 0)
+    {
+        printf("No inventory details found\n");
+        return;
+    }
+
+    if (count == 1)
+    {
+        TempFilePointer = fopen("./data/inventory.txt", "w");
+        return;
+    }
+
     int inventoryId;
     printf("Enter inventory id: ");
     scanf("%d", &inventoryId);
-    for (int i = 0; i < inventoryCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (inventories[i].inventoryId == inventoryId)
         {
@@ -1439,21 +2343,67 @@ void removeInventory()
             {
                 inventories[j] = inventories[j + 1];
             };
-            inventoryCount--;
+
+            TempFilePointer = fopen("./data/inventory.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count - 1; i++)
+            {
+                fprintf(TempFilePointer, " %d %s %d %d %s", inventories[i].inventoryId, inventories[i].inventoryName, inventories[i].inventoryQuantity, inventories[i].inventoryPrice, inventories[i].inventoryStatus);
+            };
+
+            fclose(TempFilePointer);
+            fclose(InventoryFilePointer);
+
             return;
         };
     };
+
+    fclose(InventoryFilePointer);
+
     printf("Inventory Details not found\n");
 };
 
 void removeStaff()
 {
+    int count = 0;
     printf("\n--------------------Remove Staff Details--------------------\n");
     printf("\n");
+
+    StaffFilePointer = fopen("./data/staff.txt", "r");
+
+    if (StaffFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(StaffFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %s %s %s %s", &staffs[count].staffId, staffs[count].staffName, staffs[count].staffAddress, staffs[count].staffContact, staffs[count].staffEmail, staffs[count].staffGender, staffs[count].staffBloodGroup, staffs[count].staffDesignation, staffs[count].staffJoiningDate, staffs[count].staffLeavingDate, &staffs[count].staffAge, &staffs[count].staffWeight, &staffs[count].staffHeight, staffs[count].staffEmergencyContactName, staffs[count].staffEmergencyContactRelation, staffs[count].staffEmergencyContactAddress, staffs[count].staffEmergencyContactEmail) != EOF)
+    {
+        count++;
+    }
+
+    if (count == 0)
+    {
+        printf("No staff details found\n");
+        return;
+    }
+
+    if (count == 1)
+    {
+        TempFilePointer = fopen("./data/staff.txt", "w");
+        return;
+    }
+
     int staffId;
     printf("Enter staff id: ");
     scanf("%d", &staffId);
-    for (int i = 0; i < staffCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (staffs[i].staffId == staffId)
         {
@@ -1461,21 +2411,66 @@ void removeStaff()
             {
                 staffs[j] = staffs[j + 1];
             };
-            staffCount--;
+
+            TempFilePointer = fopen("./data/staff.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count - 1; i++)
+            {
+                fprintf(TempFilePointer, " %d %s %s %s %s %s %s %s %s %s %d %d %d %s %s %s %s", staffs[i].staffId, staffs[i].staffName, staffs[i].staffAddress, staffs[i].staffContact, staffs[i].staffEmail, staffs[i].staffGender, staffs[i].staffBloodGroup, staffs[i].staffDesignation, staffs[i].staffJoiningDate, staffs[i].staffLeavingDate, staffs[i].staffAge, staffs[i].staffWeight, staffs[i].staffHeight, staffs[i].staffEmergencyContactName, staffs[i].staffEmergencyContactRelation, staffs[i].staffEmergencyContactAddress, staffs[i].staffEmergencyContactEmail);
+            };
+
+            fclose(TempFilePointer);
+            fclose(StaffFilePointer);
             return;
         };
     };
+
+    fclose(StaffFilePointer);
+
     printf("Staff Details not found\n");
 };
 
 void removeDepartment()
 {
+    int count = 0;
     printf("\n--------------------Remove Department Details--------------------\n");
     printf("\n");
+
+    DepartmentFilePointer = fopen("./data/department.txt", "r");
+
+    if (DepartmentFilePointer == NULL)
+    {
+        printf("Error!");
+        return;
+    }
+
+    while (fscanf(DepartmentFilePointer, " %d %s %s %s %s %s", &departments[count].departmentId, departments[count].departmentName, departments[count].departmentHead, departments[count].departmentContact, departments[count].departmentEmail, departments[count].departmentStatus) != EOF)
+    {
+        count++;
+    }
+
+    if (count == 0)
+    {
+        printf("No department details found\n");
+        return;
+    }
+
+    if (count == 1)
+    {
+        TempFilePointer = fopen("./data/department.txt", "w");
+        return;
+    }
+
     int departmentId;
     printf("Enter department id: ");
     scanf("%d", &departmentId);
-    for (int i = 0; i < departmentCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (departments[i].departmentId == departmentId)
         {
@@ -1483,9 +2478,28 @@ void removeDepartment()
             {
                 departments[j] = departments[j + 1];
             };
-            departmentCount--;
+
+            TempFilePointer = fopen("./data/department.txt", "w");
+
+            if (TempFilePointer == NULL)
+            {
+                printf("Error!");
+                return;
+            }
+
+            for (int i = 0; i < count - 1; i++)
+            {
+                fprintf(TempFilePointer, " %d %s %s %s %s %s", departments[i].departmentId, departments[i].departmentName, departments[i].departmentHead, departments[i].departmentContact, departments[i].departmentEmail, departments[i].departmentStatus);
+            };
+
+            fclose(TempFilePointer);
+            fclose(DepartmentFilePointer);
+
             return;
         };
     };
+
+    fclose(DepartmentFilePointer);
+
     printf("Department Details not found\n");
 };
