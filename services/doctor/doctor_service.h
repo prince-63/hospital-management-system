@@ -1,9 +1,9 @@
-#ifndef PATIENT_SERVICE_H
-#define PATIENT_SERVICE_H
+#ifndef DOCTOR_SERVICE_H
+#define DOCTOR_SERVICE_H
 
-void addPatient();
-void displayPatient();
-void updatePatient();
-void deletePatient();
+int add_doctor();
+void display_doctor();
+int update_doctor();
+int delete_doctor();
 
 #endif

@@ -1,24 +1,49 @@
 #include "./appointment_controller.h"
+#include "../../services/appointment/appointment_service.h"
 #include <stdio.h>
 
 void addAppointment()
 {
-    printf("Add Appointment\n");
+    int status = add_appointment();
+    if (status == 1)
+    {
+        printf("\nAppointment added successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to add appointment\n");
+    }
 }
 
 void viewAppointment()
 {
-    printf("View Appointment\n");
+    display_appointment();
 }
 
 void updateAppointment()
 {
-    printf("Update Appointment\n");
+    int status = update_appointment();
+    if (status == 1)
+    {
+        printf("\nAppointment updated successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to update appointment\n");
+    }
 }
 
 void deleteAppointment()
 {
-    printf("Delete Appointment\n");
+    int status = delete_appointment();
+    if (status == 1)
+    {
+        printf("\nAppointment deleted successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to delete appointment\n");
+    }
 }
 
 void appointmentController()
@@ -26,7 +51,7 @@ void appointmentController()
     int choice;
     while (1)
     {
-        printf("1. Add Appointment\n");
+        printf("\n1. Add Appointment\n");
         printf("2. View Appointment\n");
         printf("3. Update Appointment\n");
         printf("4. Delete Appointment\n");
@@ -51,7 +76,7 @@ void appointmentController()
         case 5:
             return;
         default:
-            printf("Invalid choice\n");
+            printf("\nInvalid choice\n");
         };
     }
 }

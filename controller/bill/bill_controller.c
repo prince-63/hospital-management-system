@@ -1,24 +1,49 @@
 #include "./bill_controller.h"
+#include "../../services/bill/bill_service.h"
 #include <stdio.h>
 
 void addBill()
 {
-    printf("Add Bill\n");
+    int status = add_bill();
+    if (status == 1)
+    {
+        printf("\nBill added successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to add bill\n");
+    }
 }
 
 void viewBill()
 {
-    printf("View Bill\n");
+    display_bill();
 }
 
 void updateBill()
 {
-    printf("Update Bill\n");
+    int status = update_bill();
+    if (status == 1)
+    {
+        printf("\nBill updated successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to update bill\n");
+    }
 }
 
 void deleteBill()
 {
-    printf("Delete Bill\n");
+    int status = delete_bill();
+    if (status == 1)
+    {
+        printf("\nBill deleted successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to delete bill\n");
+    }
 }
 
 void billController()

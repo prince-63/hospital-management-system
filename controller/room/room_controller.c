@@ -1,24 +1,49 @@
 #include "./room_controller.h"
+#include "../../services/room/room_service.h"
 #include <stdio.h>
 
 void addRoom()
 {
-    printf("Add Room\n");
+    int status = add_room();
+    if (status == 1)
+    {
+        printf("\nRoom added successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to add room\n");
+    }
 }
 
 void viewRoom()
 {
-    printf("View Room\n");
+    display_room();
 }
 
 void updateRoom()
 {
-    printf("Update Room\n");
+    int status = update_room();
+    if (status == 1)
+    {
+        printf("\nRoom updated successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to update room\n");
+    }
 }
 
 void deleteRoom()
 {
-    printf("Delete Room\n");
+    int status = delete_room();
+    if (status == 1)
+    {
+        printf("\nRoom deleted successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to delete room\n");
+    }
 }
 
 void roomController()
@@ -26,7 +51,7 @@ void roomController()
     int choice;
     while (1)
     {
-        printf("1. Add Room\n");
+        printf("\n1. Add Room\n");
         printf("2. View Room\n");
         printf("3. Update Room\n");
         printf("4. Delete Room\n");
