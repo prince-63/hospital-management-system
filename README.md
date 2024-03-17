@@ -4,6 +4,11 @@
 
 This Hospital Management System is a console-based application developed in the C programming language. It is designed as a college project to demonstrate the basic functionalities of managing a hospital's operations efficiently. This system helps in maintaining patient records, managing appointments, and handling various administrative tasks within a hospital setting.
 
+![Screenshot 2024-03-17 113248](https://github.com/prince-63/hospital-management-system/assets/111671729/31c52656-1c6b-4d7b-80b1-9846a7de1c73)
+
+![Screenshot 2024-03-17 113357](https://github.com/prince-63/hospital-management-system/assets/111671729/30840ad7-0b44-44b9-8b9a-e39a3d5dafd0)
+
+
 ## Features
 
 1. **Add Data:**
