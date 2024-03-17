@@ -22,15 +22,7 @@ void viewRoom()
 
 void updateRoom()
 {
-    int status = update_room();
-    if (status == 1)
-    {
-        printf("\nRoom updated successfully\n");
-    }
-    else
-    {
-        printf("\nFailed to update room\n");
-    }
+    update_room();
 }
 
 void deleteRoom()

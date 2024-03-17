@@ -13,7 +13,7 @@ int main()
     int choice;
     while (1)
     {
-        printf("1. Patient\n");
+        printf("\n1. Patient\n");
         printf("2. Doctor\n");
         printf("3. Appointment\n");
         printf("4. Room\n");

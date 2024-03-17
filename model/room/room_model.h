@@ -4,7 +4,6 @@
 typedef struct Room
 {
     int roomId;
-    char roomName[50];
     char roomType[50];
     char roomStatus[10];
 } Room;

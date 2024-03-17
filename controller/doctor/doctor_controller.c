@@ -1,25 +1,41 @@
 #include "./doctor_controller.h"
+#include "../../services/doctor/doctor_service.h"
 #include <stdio.h>
-
 
 void addDoctor()
 {
-    printf("Add Doctor\n");
+    int status = add_doctor();
+    if (status == 1)
+    {
+        printf("\nDoctor added successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to add doctor\n");
+    }
 }
 
 void viewDoctor()
 {
-    printf("View Doctor\n");
+    display_doctor();
 }
 
 void updateDoctor()
 {
-    printf("Update Doctor\n");
+    update_doctor();
 }
 
 void deleteDoctor()
 {
-    printf("Delete Doctor\n");
+    int status = delete_doctor();
+    if (status == 1)
+    {
+        printf("\nDoctor deleted successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to delete doctor\n");
+    }
 }
 
 void doctorController()
@@ -27,7 +43,7 @@ void doctorController()
     int choice;
     while (1)
     {
-        printf("1. Add Doctor\n");
+        printf("\n1. Add Doctor\n");
         printf("2. View Doctor\n");
         printf("3. Update Doctor\n");
         printf("4. Delete Doctor\n");

@@ -1,24 +1,41 @@
 #include "./patient_controller.h"
+#include "../../services/patient/patient_service.h"
 #include <stdio.h>
 
 void addPatient()
 {
-    printf("Add Patient\n");
+    int status = add_patient();
+    if (status == 1)
+    {
+        printf("\nPatient added successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to add patient\n");
+    }
 }
 
 void viewPatient()
 {
-    printf("View Patient\n");
+    display_patient();
 }
 
 void updatePatient()
 {
-    printf("Update Patient\n");
+    update_patient();
 }
 
 void deletePatient()
 {
-    printf("Delete Patient\n");
+    int status = delete_patient();
+    if (status == 1)
+    {
+        printf("\nPatient deleted successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to delete patient\n");
+    }
 }
 
 void patientController()
@@ -26,7 +43,7 @@ void patientController()
     int choice;
     while (1)
     {
-        printf("1. Add Patient\n");
+        printf("\n1. Add Patient\n");
         printf("2. View Patient\n");
         printf("3. Update Patient\n");
         printf("4. Delete Patient\n");

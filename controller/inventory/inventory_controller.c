@@ -1,24 +1,41 @@
 #include "./inventory_controller.h"
+#include "../../services/inventory/inventory_service.h"
 #include <stdio.h>
 
 void addInventory()
 {
-    printf("Add Inventory\n");
+    int status = add_inventory();
+    if (status == 1)
+    {
+        printf("\nInventory added successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to add inventory\n");
+    }
 }
 
 void viewInventory()
 {
-    printf("View Inventory\n");
+    display_inventory();
 }
 
 void updateInventory()
 {
-    printf("Update Inventory\n");
+    update_inventory();
 }
 
 void deleteInventory()
 {
-    printf("Delete Inventory\n");
+    int status = delete_inventory();
+    if (status == 1)
+    {
+        printf("\nInventory deleted successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to delete inventory\n");
+    }
 }
 
 void inventoryController()
@@ -26,7 +43,7 @@ void inventoryController()
     int choice;
     while (1)
     {
-        printf("1. Add Inventory\n");
+        printf("\n1. Add Inventory\n");
         printf("2. View Inventory\n");
         printf("3. Update Inventory\n");
         printf("4. Delete Inventory\n");

@@ -3,7 +3,9 @@
 
 int add_room();
 void display_room();
-int update_room();
+void update_room_type();
+void update_room_status();
+void update_room();
 int delete_room();
 
 #endif

@@ -5,7 +5,6 @@ int add_bill();
 void display_bill();
 int update_bill();
 int delete_bill();
-void update_bill_id();
 void update_bill_patient_id();
 void update_bill_doctor_id();
 void update_bill_room_id();

@@ -3,7 +3,11 @@
 
 int add_staff();
 void display_staff();
-int update_staff();
+void update_staff_name();
+void update_staff_gender();
+void update_staff_position();
+void update_staff_status();
+void update_staff();
 int delete_staff();
 
 #endif

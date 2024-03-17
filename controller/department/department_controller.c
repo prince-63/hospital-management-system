@@ -1,24 +1,41 @@
 #include "./department_controller.h"
+#include "../../services/department/department_service.h"
 #include <stdio.h>
 
 void addDepartment()
 {
-    printf("Add Department\n");
+    int status = add_department();
+    if (status == 1)
+    {
+        printf("\nDepartment added successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to add department\n");
+    }
 }
 
 void viewDepartment()
 {
-    printf("View Department\n");
+    display_department();
 }
 
 void updateDepartment()
 {
-    printf("Update Department\n");
+    update_department();
 }
 
 void deleteDepartment()
 {
-    printf("Delete Department\n");
+    int status = delete_department();
+    if (status == 1)
+    {
+        printf("\nDepartment deleted successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to delete department\n");
+    }
 }
 
 void departmentController()
@@ -26,7 +43,7 @@ void departmentController()
     int choice;
     while (1)
     {
-        printf("1. Add Department\n");
+        printf("\n1. Add Department\n");
         printf("2. View Department\n");
         printf("3. Update Department\n");
         printf("4. Delete Department\n");

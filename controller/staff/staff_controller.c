@@ -1,25 +1,41 @@
 #include "./staff_controller.h"
+#include "../../services/staff/staff_service.h"
 #include <stdio.h>
-
 
 void addStaff()
 {
-    printf("Add Staff\n");
+    int status = add_staff();
+    if (status == 1)
+    {
+        printf("\nStaff added successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to add staff\n");
+    }
 }
 
 void viewStaff()
 {
-    printf("View Staff\n");
+    display_staff();
 }
 
 void updateStaff()
 {
-    printf("Update Staff\n");
+    update_staff();
 }
 
 void deleteStaff()
 {
-    printf("Delete Staff\n");
+    int status = delete_staff();
+    if (status == 1)
+    {
+        printf("\nStaff deleted successfully\n");
+    }
+    else
+    {
+        printf("\nFailed to delete staff\n");
+    }
 }
 
 void staffController()
@@ -27,7 +43,7 @@ void staffController()
     int choice;
     while (1)
     {
-        printf("1. Add Staff\n");
+        printf("\n1. Add Staff\n");
         printf("2. View Staff\n");
         printf("3. Update Staff\n");
         printf("4. Delete Staff\n");

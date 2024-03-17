@@ -46,49 +46,15 @@ void display_bill()
         return;
     }
 
-    while (fread(&bill, sizeof(Bill), 1, bill_file))
-    {
-        printf("\nBill Id: %d\n", bill.billId);
-        printf("Patient Id: %d\n", bill.patientId);
-        printf("Doctor Id: %d\n", bill.doctorId);
-        printf("Room Id: %d\n", bill.roomId);
-        printf("Appointment Id: %d\n", bill.appointmentId);
-        printf("Total Amount: %d\n", bill.totalAmount);
-        printf("Bill Date: %s\n", bill.billDate);
-        printf("Bill Status: %s\n", bill.billStatus);
-    }
-    fclose(bill_file);
-}
-
-int update_bill_id()
-{
-    Bill bill;
-    int billId;
-    bill_file = fopen("./data/bill.txt", "r");
-    temp_file = fopen("./data/temp.txt", "w");
-    if (bill_file == NULL)
-    {
-        printf("\nFailed to open file\n");
-        return 0;
-    }
-
-    printf("\nEnter bill id: ");
-    scanf("%d", &billId);
+    // Print table header
+    printf("\n%-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s\n", "Bill Id", "Patient Id", "Doctor Id", "Room Id", "Appointment Id", "Total Amount", "Bill Date", "Bill Status");
 
     while (fread(&bill, sizeof(Bill), 1, bill_file))
     {
-        if (bill.billId == billId)
-        {
-            printf("\nEnter new bill id: ");
-            scanf("%d", &bill.billId);
-        }
-        fwrite(&bill, sizeof(Bill), 1, temp_file);
+        // Print table row
+        printf("%-10d %-10d %-10d %-10d %-10d %-10d %-10s %-10s\n", bill.billId, bill.patientId, bill.doctorId, bill.roomId, bill.appointmentId, bill.totalAmount, bill.billDate, bill.billStatus);
     }
     fclose(bill_file);
-    fclose(temp_file);
-    remove("./data/bill.txt");
-    rename("./data/temp.txt", "./data/bill.txt");
-    return 1;
 }
 
 int update_bill_patient_id()
@@ -308,49 +274,50 @@ int update_bill_status()
     return 1;
 }
 
-int update_bill() {
+int update_bill()
+{
     int choice;
-    while(1) {
-        printf("\n1. Update bill id");
-        printf("\n2. Update patient id");
-        printf("\n3. Update doctor id");
-        printf("\n4. Update room id");
-        printf("\n5. Update appointment id");
-        printf("\n6. Update total amount");
-        printf("\n7. Update bill date");
-        printf("\n8. Update bill status");
-        printf("\n9. Exit");
-        printf("\nEnter your choice: ");
+    while (1)
+    {
+        printf("\n1. Update patient id\n");
+        printf("2. Update doctor id\n");
+        printf("3. Update room id\n");
+        printf("4. Update appointment id\n");
+        printf("5. Update total amount\n");
+        printf("6. Update bill date\n");
+        printf("7. Update bill status\n");
+        printf("8. Go Back\n");
+        printf("Enter your choice: ");
         scanf("%d", &choice);
-        switch(choice) {
-            case 1:
-                update_bill_id();
-                break;
-            case 2:
-                update_bill_patient_id();
-                break;
-            case 3:
-                update_bill_doctor_id();
-                break;
-            case 4:
-                update_bill_room_id();
-                break;
-            case 5:
-                update_bill_appointment_id();
-                break;
-            case 6:
-                update_bill_total_amount();
-                break;
-            case 7:
-                update_bill_date();
-                break;
-            case 8:
-                update_bill_status();
-                break;
-            case 9:
-                return 1;
-            default:
-                printf("\nInvalid choice\n");
+
+        switch (choice)
+        {
+        case 1:
+            update_bill_patient_id();
+            break;
+        case 2:
+            update_bill_doctor_id();
+            break;
+        case 3:
+            update_bill_room_id();
+            break;
+        case 4:
+            update_bill_appointment_id();
+            break;
+        case 5:
+            update_bill_total_amount();
+            break;
+        case 6:
+            update_bill_date();
+            break;
+        case 7:
+            update_bill_status();
+            break;
+        case 8:
+            return 1;
+        default:
+            printf("\nInvalid choice\n");
+            break;
         }
     }
 }

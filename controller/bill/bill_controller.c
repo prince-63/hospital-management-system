@@ -51,7 +51,7 @@ void billController()
     int choice;
     while (1)
     {
-        printf("1. Add Bill\n");
+        printf("\n1. Add Bill\n");
         printf("2. View Bill\n");
         printf("3. Update Bill\n");
         printf("4. Delete Bill\n");

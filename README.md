@@ -52,10 +52,10 @@ This Hospital Management System is a console-based application developed in the 
    - Use a C compiler (e.g., GCC) to compile the source code.
 
    ```JavaScript
-     gcc HospitalManagementSystem.c -o HospitalManagementSystem
+     gcc main.c ./controller/appointment/appointment_controller.c ./controller/bill/bill_controller.c ./controller/doctor/doctor_controller.c ./controller/patient/patient_controller.c ./controller/room/room_controller.c ./controller/inventory/inventory_controller.c ./controller/staff/staff_controller.c ./controller/department/department_controller.c ./services/appointment/appointment_service.c ./services/bill/bill_service.c ./services/department/department_service.c ./services/doctor/doctor_service.c ./services/inventory/inventory_service.c ./services/patient/patient_service.c ./services/room/room_service.c ./services/staff/staff_service.c -o main
    ```
 2. **Run the Application:**
    - Execute the compiled binary.
    ```JavaScript
-     ./HospitalManagementSystem
+     ./main
    ```
