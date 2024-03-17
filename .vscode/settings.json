@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "appointment_controller.h": "c",
+        "appointment_service.h": "c",
+        "room_controller.h": "c"
+    }
+}
